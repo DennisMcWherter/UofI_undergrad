@@ -1,0 +1,21 @@
+============
+Public code
+============
+No public code was used in this MP. However, I referenced Wikipedia for Dijkstra's algorithm. I used a modified (admittedly, less efficient) version to implement routing.
+
+=============
+Architecture
+=============
+I used a multi-threaded application layout for this MP. I had the main thread first initialize my connections (UDP server socket and TCP connection) andthen passed the UDP socket off to a worker thread for all UDP controlling. I used the main thread to handle all TCP requests/responses to the manager. To synchronize the threads, I used a queue and a condition variable. The queue would hold information about requests which needed to be sent from the UDP thread. The TCP thread would occasionally check this queue and process anything in it. After processing the queue, the TCP thread would signal the UDP thread to continue through the condition variable. The reason these threads are synchronized in such a way is to allow the manager to receive responses in order. For instance, the LOG FWD message needs to be received by the manager before actually forwarding the message to the next server.
+
+=========
+Protocol
+=========
+I implemented a link-state routing protocol. When receiving updates, each router gets a full view of the graph. When making routing decisions, dijkstra's algorithm (more or less) is run on the full graph. The packet is then forwarded to the nexthop. If no path exists, the packet is backlogged for a specified TTL before it is dropped. This backlog allows for packets to be forwarded in the event that the router's graph is simply not fully up-to-date.
+
+==========
+Topology
+==========
+
+I designed a few topologies to test the the protocol. For instance, I designed a complete graph such that the longest route (in terms of topology) was actually the best route. Also, I designed a topology where the best route existed, then was removed, then returned with a higher cost. Along with these topologies, all of my tests came out with expected results in the end. However, in debugging the protocol, I found that sometimes the graph would find the shortest path but not return the correct next-hop node. This was due to a bug in my graph implementation.
+

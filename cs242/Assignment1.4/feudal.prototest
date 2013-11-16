@@ -1,0 +1,8 @@
+# Basic Feudal protocol
+newGame=NEWGAME
+nextTurn=NEXTTURN
+gameOver=GAMEOVER
+checkProto=CHECKPROTOCOL
+protocol=FEUDALDENNIS
+boardSetup=BOARDSETUP
+updateBoard=UPDATEBOARD

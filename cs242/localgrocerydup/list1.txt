@@ -1,0 +1,7 @@
+apples
+oranges
+peach
+strawberries
+bananas
+grapes
+melons

@@ -1,0 +1,19 @@
+# Sample Make
+# CS 241
+# Dennis J. McWherter, Jr.
+q:
+	echo "1"
+	echo "waiting 2 seconds for q to finish (i.e. nothing should run)"
+	sleep 2
+a: q b d
+	echo "4"
+c: a
+	echo "5"
+d: q
+	sleep 1
+	echo "3"
+b: q
+	echo "2"
+	echo "Waiting for b to finish (should block a i.e. 4)"
+	sleep 1
+	echo "b finished"

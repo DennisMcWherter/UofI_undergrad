@@ -1,0 +1,7 @@
+IMPORTANT: This is a NIGHTLY autograder report.  This is not your final grade and this may not be the
+complete set of test cases that will be ran to find your final grade for the MP.  This is ONLY provided
+to check if you are on the right track with programming your MP.
+
+Program Execution Score: 4.0/4.0
+
+October 11, 2011 12:33

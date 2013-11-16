@@ -1,0 +1,458 @@
+Index: protocol.c
+===================================================================
+--- protocol.c	(revision 504)
++++ protocol.c	(working copy)
+@@ -14,9 +14,12 @@
+ #include "networking.h"
+ #include "ConcurrentQueue.h"
+ 
++#define MAX_BUFFER 65536 // Max size of UDP packet
++
+ // Forward decl
+ static void insert_neighbor(router_t* router, network_t* neighbor);
+-static void update_neighbor(router_t* router, int id, int cost);
++static void update_neighbor(router_t* router, int id, int cost, network_t* nexthop);
++static network_t* find_neighbor(router_t* router, int id);
+ static network_t* find_route(router_t* router, int id);
+ 
+ /** Manager protocol */
+@@ -107,7 +110,8 @@
+     neighbor->id = addr;
+     neighbor->host = malloc(strlen(hostname) + 1);
+     neighbor->port = malloc(strlen(port) + 1);
+-    neighbor->cost = -1; // No link initially until we are told otherwise
++    neighbor->cost = cost; // Cost of taking link to neighbor
++    neighbor->nexthop = NULL; // If nexthop = NULL, then direct link if cost != -1
+     
+     strncpy(neighbor->host, hostname, strlen(hostname));
+     strncpy(neighbor->port, port, strlen(port));
+@@ -205,7 +209,6 @@
+ {
+   char* top = NULL;
+   char* recv = NULL;
+-  char out[1024]; // Buffer is probably too small - check UDP packet size
+   char first[256];
+ 
+   if(router == NULL)
+@@ -240,7 +243,7 @@
+  */
+ void tcp_control(int sockfd, router_t* router)
+ {
+-  char out[1024];
++  char out[MAX_BUFFER];
+   char first[256];
+   char* in = NULL;
+   int end = 0;
+@@ -275,9 +278,9 @@
+        } else {
+          printf("Received: %s\n", in);
+          if(router->id != fid)
+-           update_neighbor(router, fid, cost);
++           update_neighbor(router, fid, cost, NULL);
+          else
+-           update_neighbor(router, sid, cost);
++           update_neighbor(router, sid, cost, NULL);
+          sprintf(out, "COST %d OK\n", cost);
+         }
+       } else {
+@@ -302,6 +305,13 @@
+ }
+ 
+ /** UDP Server Manager */
++/**
++ * Forward or receive a data message
++ *
++ * @param msg     Data message
++ * @param len     Length of data message
++ * @param router  Router object
++ */
+ void udp_data_msg(const char* msg, size_t len, router_t* router)
+ {
+   int dst = 0;
+@@ -310,6 +320,7 @@
+   network_t* nexthop = NULL;
+   struct addrinfo hints, *sinfo;
+   int sockfd = 0;
++  char* backlog = NULL;
+ 
+   if(msg == NULL || router == NULL)
+     return;
+@@ -344,21 +355,201 @@
+       getaddrinfo(nexthop->host, nexthop->port, &hints, &sinfo);
+ 
+       sockfd = socket(sinfo->ai_family, sinfo->ai_socktype, sinfo->ai_protocol);
++      if(sockfd == -1) {
++        printf("Could not open a UDP socket\n");
++        return;
++      }
+ 
+       sendto(sockfd, msg, len, 0, sinfo->ai_addr, sinfo->ai_addrlen);
+ 
+       freeaddrinfo(sinfo);
+       close(sockfd);
+-    } else {
+-      // Dropped?
++    } else { // Backlog and wait until later (we should eventually get a route?)
++      backlog = malloc(sizeof(int) + len);
++      memcpy(backlog + 4, msg, len);
++      *((int*)backlog) = len;
++      push_queue(&router->backlog, backlog, len);
++      free(backlog);
+     }
+   }
+ 
+-
+   free(out);
+ }
+ 
+ /**
++ * Update the routes to routers
++ *
++ * @param buf     Received buffer msg
++ * @param len     Number of bytes received
++ * @param router  Router object
++ */
++void udp_update_routes(const char* buf, size_t len, router_t* router)
++{
++  network_t* rptr = NULL;
++  network_t* nexthop = NULL;
++  int dest = 0;
++  int srchop = 0;
++  int cost = 0;
++
++  if(router == NULL || len != 9)
++    return;
++
++  // Datagram layout (9 bytes total):
++  // Control message (1 byte) [0]
++  // nexthop (2 byte) [1-2]
++  // dest (2 byte) [3-4]
++  // cost (4 byte) [5-8]
++  srchop = (buf[1] << 8) | buf[2];
++  dest   = (buf[3] << 8) | buf[4];
++  cost   = (buf[5] << 24) | (buf[6] << 16) | (buf[7] << 8) | buf[8];
++
++  nexthop = find_neighbor(router, srchop);
++
++  if(nexthop == NULL) {
++    fprintf(stderr, "Received an update message from a non-direct neighbor???\n");
++    return; // This is a problem?
++  }
++  printf("Init cost: %d\n", cost);
++
++  cost += nexthop->cost; // Need to add the cost of getting to the next hop
++
++  rptr = find_neighbor(router, dest);
++  if(rptr == NULL) { // Create a new one
++    rptr = malloc(sizeof(network_t));
++    rptr->id      = dest;
++    rptr->cost    = cost;
++    rptr->nexthop = nexthop;
++    rptr->host    = NULL;
++    rptr->port    = NULL;
++  printf("New route %d of cost %d (nexthop cost: %d)\n", dest, cost, nexthop->cost);
++    insert_neighbor(router, rptr);
++  } else { // Update the current one
++    pthread_mutex_lock(&router->lock);
++    if(rptr->nexthop == nexthop) // Just update cost if this was best route
++      rptr->cost = cost;
++    else if(rptr->cost >= cost) { // If new route is better, update
++      rptr->cost = cost;
++      rptr->nexthop = nexthop;
++    }
++    pthread_mutex_unlock(&router->lock);
++  }
++}
++
++/**
++ * Send routing tables to neighbors
++ *
++ * @param router    Router object
++ */
++void send_routes(router_t* router)
++{
++  network_t** direct = NULL;
++  network_t* next = NULL;
++  int total = 0;
++  int i = 0;
++  size_t dlen = 24;
++  int sockfd = 0;
++  char dgram[9];
++  struct addrinfo hints, *sinfo;
++
++  if(router == NULL)
++    return;
++
++  hints.ai_family   = AF_INET;
++  hints.ai_socktype = SOCK_DGRAM;
++
++  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
++  if(sockfd == -1) {
++    printf("Could not open UDP socket\n");
++    return;
++  }
++
++  direct = malloc(dlen * sizeof(network_t*));
++
++  pthread_mutex_lock(&router->lock);
++
++  // First get our direct neighbors to know who to send routes to
++  next = router->neighbors;
++  while(next != NULL) {
++    if(next->id != -1 && next->nexthop == NULL) {
++      direct[total++] = next;
++      if(total >= dlen) {
++        dlen *= 2;
++        direct = realloc(direct, dlen * sizeof(network_t*));
++      }
++    }
++    next = next->next;
++  }
++
++  for(i = 0 ; i < total ; ++i) {
++    getaddrinfo(direct[i]->host, direct[i]->port, &hints, &sinfo);
++    printf("direct: %s : %s\n", direct[i]->host, direct[i]->port);
++
++    next = router->neighbors;
++    while(next != NULL) {
++      if(direct[i]->id != next->id && next->nexthop != direct[i]) {
++        dgram[0] = 2;
++        dgram[1] = (char)((router->id & (int)0xff00) >> 8);
++        dgram[2] = (char)((router->id & (int)0x00ff));
++        dgram[3] = (char)((next->id & (int)0xff00) >> 8);
++        dgram[4] = (char)((next->id & (int)0x00ff));
++        dgram[5] = (char)((next->cost & (int)0xff000000) >> 24);
++        dgram[6] = (char)((next->cost & (int)0x00ff0000) >> 16);
++        dgram[7] = (char)((next->cost & (int)0x0000ff00) >> 8);
++        dgram[8] = (char)((next->cost & (int)0x000000ff));
++
++        sendto(sockfd, dgram, sizeof(dgram), 0, sinfo->ai_addr, sinfo->ai_addrlen);
++      }
++      next = next->next;
++    }
++
++    // TODO: Uhh? Why crash?
++    //freeaddrinfo(sinfo);
++    sinfo = NULL;
++  }
++
++  pthread_mutex_unlock(&router->lock);
++
++  close(sockfd);
++  free(direct);
++}
++
++/**
++ * Try to deliver backlog messages
++ *
++ * @param router    Router object
++ */
++void send_backlog(router_t* router)
++{
++  char** blog_cont = NULL;
++  int blogsize = 24;
++  int total = 0;
++  int i = 0;
++  int len = 0;
++
++  if(router == NULL)
++    return;
++
++  blog_cont = malloc(blogsize * sizeof(char*));
++
++  while(isEmpty(&router->backlog) > 0) {
++    if(total >= blogsize) {
++      blogsize *= 2;
++      blog_cont = realloc(blog_cont, blogsize * sizeof(char*));
++    }
++    blog_cont[total++] = (char*)pop_queue(&router->backlog);
++  }
++
++  for(i = 0 ; i < total ; ++i) {
++    len = (blog_cont[i][0] << 24) | (blog_cont[i][1] << 16) | (blog_cont[i][2] << 8) | blog_cont[i][3];
++    udp_data_msg(blog_cont[i]+4, len, router);
++    printf("Tried to send backlog: %s\n", blog_cont[i]+4);
++    free(blog_cont[i]);
++  }
++
++  free(blog_cont);
++}
++
++/**
+  * UDP Control method
+  *
+  * @param sockfd    Open socket to UDP server
+@@ -368,12 +559,13 @@
+ {
+   int done = 0;
+   int recvd = 0;
+-  char buf[1024];
++  char buf[MAX_BUFFER];
+ 
+   if(router == NULL)
+     return;
+ 
+   while(!done) {
++    buf[0] = 0; // Reset for good measure
+     recvd = recvUDP(sockfd, buf, sizeof(buf));
+ 
+     if(recvd > 0) {
+@@ -381,6 +573,8 @@
+         case 1: // Data message
+           udp_data_msg(buf, recvd, router);
+           break;
++        case 2: // Control message to update routes
++          udp_update_routes(buf, recvd, router);
+         default:
+           // Unknown case
+           break;
+@@ -389,6 +583,13 @@
+       perror("UDP receive"); // This may be a synchronization issue
+     }
+ 
++    // TODO: Execute a method which tries sending items in a buffer
++    // just in case they arrived when no route was there and then
++    // later a route was established
++    
++    send_routes(router);
++    send_backlog(router);
++
+     pthread_mutex_lock(&router->lock);
+     done = router->done;
+     pthread_mutex_unlock(&router->lock);
+@@ -419,8 +620,8 @@
+   router->host[strlen(host)] = '\0';
+   router->port[strlen(port)] = '\0';
+ 
+-
+   init_queue(&router->notify);
++  init_queue(&router->backlog);
+   pthread_mutex_init(&router->lock, NULL);
+ }
+ 
+@@ -440,6 +641,7 @@
+   free(router->host);
+   free(router->port);
+   destroy_queue(&router->notify);
++  destroy_queue(&router->backlog);
+   pthread_mutex_destroy(&router->lock);
+ 
+   next = router->neighbors;
+@@ -482,8 +684,9 @@
+  * @param router    Router object
+  * @param id        Id of other link to update
+  * @param cost      New cost to that link
++ * @param nexthop   The nexthop to send traffic through at the given cost
+  */
+-static void update_neighbor(router_t* router, int id, int cost)
++static void update_neighbor(router_t* router, int id, int cost, network_t* nexthop)
+ {
+   network_t* neighbor = NULL;
+ 
+@@ -496,6 +699,7 @@
+   while(neighbor != NULL) {
+     if(neighbor->id == id) {
+       neighbor->cost = cost;
++      neighbor->nexthop = nexthop;
+       break;
+     }
+     neighbor = neighbor->next;
+@@ -504,6 +708,32 @@
+ }
+ 
+ /**
++ * Find a neighbor with a given id in the routing table
++ *
++ * @param router    Router object
++ * @param id        Id to find
++ * @return  A pointer to the neighbor otherwise NULL if none exists.
++ */
++static network_t* find_neighbor(router_t* router, int id)
++{
++  network_t* next = NULL;
++
++  if(router == NULL)
++    return NULL;
++
++  pthread_mutex_lock(&router->lock);
++  next = router->neighbors;
++  while(next != NULL) {
++    if(next->id == id)
++      break;
++    next = next->next;
++  }
++  pthread_mutex_unlock(&router->lock);
++
++  return next;
++}
++
++/**
+  * Find the best route to a given id
+  *
+  * @param router    Router object
+@@ -512,22 +742,26 @@
+  */
+ static network_t* find_route(router_t* router, int id)
+ {
+-  network_t* neighbor = NULL;
++  network_t* route = NULL;
+ 
+   if(router == NULL)
+     return NULL;
+ 
+-  neighbor = router->neighbors; 
++  route = find_neighbor(router, id);
+ 
+-  // TODO: Actually implement this - right now, just use direct routes
++  if(route == NULL)
++    return NULL;
++
+   pthread_mutex_lock(&router->lock);
+-  while(neighbor != NULL) {
+-    if(neighbor->id == id)
+-      break;
+-    neighbor = neighbor->next;
+-  }
++  // This checks that we know a route to the id
++  // and, if there is a nexthop (i.e. no direct link),
++  // take the best one (as updated by routing table)
++  if(route->cost == -1)
++    route = NULL;
++  else if(route->nexthop != NULL)
++    route = route->nexthop;
+   pthread_mutex_unlock(&router->lock);
+ 
+-  return neighbor;
++  return route;
+ }
+ 
+Index: protocol.h
+===================================================================
+--- protocol.h	(revision 502)
++++ protocol.h	(working copy)
+@@ -22,6 +22,7 @@
+   int cost;
+   char* host;
+   char* port;
++  struct _network_t* nexthop;
+   struct _network_t* next;
+   struct _network_t* prev;
+ } network_t;
+@@ -37,6 +38,7 @@
+   int log;
+   int done;
+   queue_t notify;
++  queue_t backlog;
+   network_t* neighbors;
+   pthread_mutex_t lock;
+ } router_t;
+@@ -54,6 +56,9 @@
+ // UDP methods
+ void udp_control(int sockfd, router_t* router);
+ void udp_data_msg(const char* msg, size_t len, router_t* router);
++void udp_update_routes(const char* buf, size_t len, router_t* router);
++void send_routes(router_t* router);
++void send_backlog(router_t* router);
+ 
+ #endif /** PROTOCOL_H__ */
+ 

@@ -1,0 +1,226 @@
+\documentclass[letterpaper, 12pt]{article}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{plain}                                                      %%
+%%%%%%%%%% EXACT 1in MARGINS %%%%%%%                                   %%
+\setlength{\textwidth}{6.9in}     %%                                   %%
+\setlength{\oddsidemargin}{-0.10in}   %% (It is recommended that you       %%
+\setlength{\evensidemargin}{-0.10in}  %%  not change these parameters,     %%
+\setlength{\textheight}{9.5in}    %%  at the risk of having your       %%
+\setlength{\topmargin}{-.3in}       %%  proposal dismissed on the basis  %%
+\setlength{\headheight}{0in}      %%  of incorrect formatting!!!)      %%
+\setlength{\headsep}{0in}         %%                                   %%
+\setlength{\footskip}{.5in}       %%                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                   %%
+\setlength {\parskip}{8pt}                                             %%
+%\newcommand{\required}[1]{\section*{\hfil #1\hfil}}                    %%
+%\renewcommand{\refname}{\hfil References\hfil}                         %%
+%\bibliographystyle{plain}  
+\bibliographystyle{abbrv}                                           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{empty}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\newcommand{\ARightarrow}{\stackrel{a}{\Rightarrow}}
+\newcommand{\comment}[1]{}
+\newcommand{\shortdividerline}{
+\begin{center} \line(1,0){150} \end{center}
+}
+\newcommand{\dividerline}{\begin{center}\hrule\end{center}}
+
+
+
+\usepackage{graphicx}
+\usepackage{latexsym}
+
+
+
+\begin{document}
+
+\noindent
+ECE/CS 438 (Fall 2012) \hfill  Name: Dennis McWherter (dmcwhe2) \\
+Homework 6 \hfill Due: 2 p.m., November 9, 2012 (Friday)\\
+{\bf
+Standard extension of 48 hours changed to 72 hours for Homework 6}
+
+Enter your answers in the space provided below. {\bf If needed, attach additional sheets to show the details of your work.} 
+
+
+\begin{enumerate}
+
+\item Consider a transmitter-receiver pair at distance $d$.
+        Assume the free-space propagation model.
+        The path {\em gain} is $10^{-3}$ when distance is $d_0$.
+	Determine the path gain
+	for distance $d= 2d_0$ and $4d_0$.
+
+	~
+
+	\begin{list}{}{}
+	\item Path loss at $d = 2d_0$ ~~: 4000
+
+	~
+
+	\item Path loss at $d = 4d_0$ ~~: 16000
+
+	~
+	\end{list}
+
+
+\item
+Consider four nodes A, B, C and D.
+Host C uses transmit power equal to 10 mW.
+Noise at each host is negligible, and may be assumed to be 0
+for the purposes of calculations in this question.
+Assume the following path gains:
+$g_{AB} = g_{CD} = 10^{-3}$, $g_{AD} = 10^{-9}$
+and $g_{CB}= 10^{-7}$.
+Any path gains not specified here can be assumed to be
+$10^{-15}$.
+
+Suppose that host A transmits to host B, and at the same time
+host C transmits to host D.
+Determine the {\em range}\, of transmit power
+values that may be used by host A while achieving SINR 
+{\em greater than or equal} to 4000 for both the
+transmissions?
+
+~
+
+Answer: 0.4mW $\le P_A \le$ 250mW
+
+~
+
+
+
+
+\item 
+Consider a network with two flows, one flow from host P to Q,
+and another from host S to R.
+Suppose that the nodes in this network use IEEE 802.11 DCF protocol
+with a certain carrier sense threshold $P_{CS}$,
+and that the two flows are always backlogged.
+
+
+~
+
+Can the aggregate throughput of the two flows
+{\em increase}\, if the physical carrier sensing threshold is made much larger than the 
+original value?
+Explain your answer briefly.
+
+~
+
+\textbf{Yes} ~ / ~No ~~~ (circle your answer)
+
+
+~
+
+Explanation: The aggregate throughput of the two flows will not necessarily increase if the physical carrier sensing threshold is made much larger, however, if the nodes are in the proper configuration, it is possible. If node S is hidden at Q and node P is hidden at R, then nodes P and Q can transmit over each other without collisions being detected at the receiving nodes.
+
+
+~
+
+~
+
+~
+
+~
+
+
+\item Consider a wireless network consisting of 4 nodes,
+A, B, C, and D, such that nodes A and B always have packets to transmit
+to nodes C and D, respectively.
+
+The nodes use a slotted access mechanism with slot size
+equal to packet size, and synchronized slot boundaries.
+Each of nodes A and B may transmit in a given slot with
+probability $p$.
+
+Assume the following:
+
+(i) In a given slot, if exactly one node transmits a packet, then
+	the transmission is successful.
+
+(ii) In a given slot, if two nodes transmit simultaneously, then
+	exactly one transmission succeeds with probability
+	$\alpha$, and both transmissions are erroneous with
+	probability $(1-\alpha)$. \\
+
+(a) Determine the optimal access probability $p$ that maximizes the total
+throughput. The optimal probability may be a function of $\alpha$.
+
+~
+
+
+Answer: $p = {{2 + \alpha} \over {4 + 2\alpha}}$
+
+
+~
+
+(b) Determine the maximum achievable throughput (in packets/slot) 
+	when $\alpha=0.5$.
+
+~
+
+
+Answer: $1 \over 2$
+
+
+~
+
+
+
+\item 
+Circle true or false:
+
+Consider node A transmitting to node B, and node C transmitting to
+    node D simultaneously. It is given that the transmission to node B
+    is corrupted due to the interference from node C. This {\em always} implies that
+    the transmission by node C to node D is also corrupted.
+
+~ 
+
+True ~ / ~ \textbf{False}
+
+
+\end{enumerate}
+
+\pagebreak
+
+\begin{enumerate}
+\item $P_r(d) = P_r(d_0){d_0^2 \over d^2}$ \\
+(a) So $P_r(2d_0) = P_r(d_0){d_0^2 \over {4d_0^2}} = {{10^{-3} \cdot P_t} \over 4}$. Thus, ${P_r \over P_t} = {10^{-3} \over 4} = gain$. Therefore, loss is ${1 \over gain} = {4 \over 10^{-3}} = 4000$ \\
+(b) Without loss of generality, $P_r(4d_0) = P_r(d_0){d_0^2 \over {16d_0^2}}$ so $gain = {{10^{-3} \over 16}}$. The path loss is ${1 \over gain} = {16 \over 10^{-3}} = 16000$.
+
+\item Find the $SINR$ at the receiving nodes to calculate an appropriate signal. Let $N = 0$ in the $SINR$ equation (as per problem description). \\
+$SINR_D = {{10^{-3}} \cdot g_{CD} \over {P_A \cdot g_{AD}}}$ \\\\
+$SINR_B = {P_A \cdot {g_{AB}} \over {{10^{-3}} \cdot g_{CB}}}$ \\\\
+Let $SINR_B = 4000$. Then: \\
+$P_A = {{10^{-3} \cdot g_{CD}} \over {4000 \cdot g_{AD}}} = {{10^{-3} \cdot {10^{-3}}} \over {4000 \cdot {10^{-9}}}} = {1 \over 4}$ which is an upper-bound. Now, let $SINR_D = 4000$. Then: \\\\
+$P_A = {{4 \cdot g_{CB}} \over {g_{AB}}} = {{4 \cdot {10^{-7}} \over {10^{-3}}}} = {4 \over 10000} = {1 \over 2500} = .0004 = 0.4$mW \\
+This gives us a lower-bound for $P_A$. Thus $0.4$mW $\le P_A \le 250$mW
+\item See question
+\item (a) $p = {n \choose 1}p(1-p)^{n-1} = {2 \choose 1}p(1-p) = 2p - 2p^2$ is the probability that a packet is successfully sent. However, there is also the probability that both nodes try to transmit and with probability $\alpha$, the transmission still succeeds. Then the following function needs to be maximized: \\
+$2p - 2p^2 + {2 \choose 2}p(1-p)\alpha = 2p - 2p^2 + \alpha p - \alpha p^2 = f(x)$ \\\\
+$f'(x) = 2p - 4p + \alpha - 2\alpha p = 0$ \\
+$p = {{2 + \alpha} \over {4 + 2\alpha}}$ \\\\
+(b) ${{2 + \alpha} \over {4 + 2\alpha}} =  {{2 + .5} \over {4 + 2(.5)}} = {2.5 \over 5} = {1 \over 2}$
+
+\item Consider the idea of the hidden terminal. Let nodes $A$ and $C$ be hidden from each other and $B$ be exposed to both. Then there is interference from both $A$ and $C$'s transmissions at node $B$. However, if $D$ is also hidden from $A$ (or sufficiently far), then $D$ receives $C$'s transmission with no corruption. Therefore, the answer to this question is \textbf{false}.
+\end{enumerate}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+

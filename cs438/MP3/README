@@ -1,0 +1,52 @@
+Partners: Dennis McWherter (dmcwhe2)
+          John Maxwell Docauer (docauer2)
+============
+Description
+============
+
+Both team members were actively involved in the design and development of the MP.
+Design decisions were initially made in haste. The implementation of the TCP 
+class (tcp.h/tcp.cpp) was initially to support full TCP with multiple connections.
+However, with changes to the specification (single TCP connection) and other
+unplanned roadblocks, the implementation became grossly over-complicated for the job.
+Alas, due to time-constraints, rather than re-write the code we modified what was necessary.
+
+The MP is broken into several files, tcp.h/tcp.cpp, server.cpp, and client.cpp. The server.cpp
+and client.cpp implement the simple server and client programs, respectively, built on top of
+the TCP implementation. The tcp header and source files contain our implementation of TCP. Within
+this implementation, we use a simple struct for containing Packet data. Naturally, there exist
+functions to "flatten" packet data (i.e. copy it into a buffer to be sent over the network)
+and to "expand" the buffer into a packet (i.e. copy a received buffer back into a packet).
+The send and receive buffers were implemented through STL priority queues and other TCP
+state-related variables were represented as class members.
+
+More elaborately, the packet contains 2 unsigned values (metadata and size of packet), an int 
+which is the start byte of the packet, and an unsigned char buffer of size 75. This allows the
+packet always to be the stipulated 100 bytes while containing all required information.
+
+===========
+Question 1
+===========
+
+Slow start is required so that available bandwidth is not wasted. For instance, by doubling
+the congestion window, you can increasingly send more data more quickly. As long as the data
+is being received, this allows for a much higher throughput. Slow start allows for the connection
+to quickly find the level of throughput that the network can support.
+
+Congestion avoidance is not enough since it grows more slowly (only an additive increase). 
+It is possible that a connection can handle sending more data, but the entire file is sent
+before full capacity is reached. Then the capacity of the link is wasted and throughput is
+greatly diminished.
+
+
+===========
+Question 2
+===========
+
+The rationale behind additive increase / multiplicative decrease (AIMD) is to avoid congesting the
+network; that is, the aim is to avoid interfering with the network's traffic. If a multiplicative
+increase / additive decrease (MIAD) were to be used, it is possible that the connection would
+quickly overshoot the level of bandwidth which the network could support, and then only
+slowly back off while the network continues to suffer until a supportable point is reached. 
+AIMD, on the other hand, will more slowly approach this supportable point; and if this point
+is passed, it will quickly back off to point where the network is no longer overburdened.

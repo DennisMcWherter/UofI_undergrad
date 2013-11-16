@@ -1,0 +1,10 @@
+A: D
+	sleep 5
+	echo A
+B: D
+	echo B
+C: D
+	sleep 10
+	echo C
+D:
+	echo D

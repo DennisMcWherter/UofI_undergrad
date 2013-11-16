@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sample configuration for MyRepo -->
+<ServerList numKeys="1000000">
+  <server id="0" bindAddr="130.126.28.24" pubPort="1231" internalPort="11111" fdPort="21111" />
+  <server id="1" bindAddr="130.126.28.25" pubPort="1232" internalPort="11112" fdPort="21112" />
+  <server id="2" bindAddr="130.126.28.26" pubPort="1233" internalPort="11113" fdPort="21113" />
+  <server id="3" bindAddr="130.126.28.27" pubPort="1234" internalPort="11114" fdPort="21114" />
+</ServerList>

@@ -1,0 +1,33 @@
+Design Notes:
+
+This is a decentralized failure detection system. Do not be mislead by the notion of "Client" and "Server."
+If these words confuse your notion of decentralized system, replace them with "Receiver" and "Sender" respectively.
+Each machine in the network is composed of both a server and client component. The "Server" sends out all the 
+messages to a connected peer. The client receives messages from its connected peer. The "Client" never sends messages
+and the "Server" component never receives messages. A visual model is given below
+
+
+--> Denotes message sent in this direction (i.e. the receiving machine waits for this message)
+
+Top-level:
+
+                     / -->[ Machine 1 ]--\
+                    /                     \
+                   /                       \
+            [ Machine 2]                    --> [ Machine 3 ]
+                ^                                     |
+                |-------------------------------------|
+
+
+Detailed look:
+                            [ Machine 1 ]
+                 ---------->[  Client   ]
+                /           [  Server   ]-- 
+               /                            \
+[ Machine 2 ] /                              \        [ Machine 2 ]
+[ Server    ]/                                \------>[ Client    ]
+[ Client    ]                                         [ Server    ]
+     ^                                                     |
+     |-----------------------------------------------------|
+
+

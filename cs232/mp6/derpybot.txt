@@ -1,0 +1,23 @@
+
+A technical specification guide to Derpybot.
+
+=========================
+   Table of Contents
+=========================
+
+I.)  Derpybot, A Hero's Story
+II.) Technical Specifications
+
+===========================================================
+I.) Derpybot, A Hero's Story
+		Not for the Faint of Heart.
+===========================================================
+Derpy. A word infamous among the Comupter Science community for being utterly useless. Approximately 8:22am one September morning, Derpy was born to proud uncles: Rohan, Dennis, and Lee. Born of his parents, MP2 and MP4 from Craig Zilles' creative programming challenges, Derpy evolved into a formidable little spimbot. Through much progress, rewriting, and self-modifying code, Derpy has learned to actually push blocks (oh, what progress!). His legal guardians (adoptive uncles) were overjoyed to find their little spimbot actually doing what was intended aside from the fact that he still runs into walls injuring himself with unhandled interrupt exceptions.
+
+To fix his issues, Derpy modified his code. Again. This time, making his rewrite look like a monkey trying to type Shakespeare. While Dennis continually forced the little spimbot to run into the wall (thus, inducing errors), Rohan "lightning fingers" Shah quickly fixed the errors before Derpy could modify himself anymore. All is well in the land of Derpybot <3.
+
+
+
+==============================
+II.) Technical Specifications
+==============================

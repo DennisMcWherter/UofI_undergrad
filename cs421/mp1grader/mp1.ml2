@@ -1,0 +1,20 @@
+(* MP1 *)
+let x = 32.7;;
+
+let salute = "Greetings, my friend!";;
+
+let times_13 = fun n -> n * 13;;
+
+let square_plus_x = fun y -> let z = (y *. y) in z +. x;;
+
+let hail = fun name -> if name == "Elsa"
+  then print_string "Wayell, hah theya, Ayelsa!"
+  else print_string ("Dear, "^name^". I wish you the best in CS421.\n");;
+
+let has_smallest_abs = fun m n -> let x = (if m < 0 then m * -1 else m) in
+  let y = (if n < 0 then n * -1 else n) in
+    if (x < y) then m else n;;
+
+let swap_pair = fun (x,y) -> (y,x);;
+
+let pair_app = fun (f,g) x -> (f(x), g(x));; 

@@ -1,0 +1,117 @@
+Timestamp     Segment        Send    Recv   Phase    cwnd ssthresh         
+--------------------------------------------------------------------
+
+!!!Control Packet packet: start: 0 ; metadata: 0x3 ; sendto val: 96
+
+..Receiving..
+....Received (96)...
+0 + 75 = 75
+....Sending ack start: 76
+!!!Control Packet packet: start: 76 ; metadata: 0x11 ; sendto val: 96
+
+Looking
+Sent up recent data (from ----) :::::::: Packet.start 0 ; packet.size75
+ELF..Receiving..
+....Received (96)...
+75 + 75 = 150
+....Sending ack start: 151
+!!!Control Packet packet: start: 151 ; metadata: 0x11 ; sendto val: 96
+
+Sent up recent data (from ----) :::::::: Packet.start 75 ; packet.size75
+..Receiving..
+....Received (96)...
+150 + 75 = 225
+....Sending ack start: 226
+!!!Control Packet packet: start: 226 ; metadata: 0x11 ; sendto val: 96
+
+Sent up recent data (from ----) :::::::: Packet.start 150 ; packet.size75
+..Receiving..
+....Received (96)...
+225 + 75 = 300
+....Sending ack start: 301
+!!!Control Packet packet: start: 301 ; metadata: 0x11 ; sendto val: 96
+
+Sent up recent data (from ----) :::::::: Packet.start 225 ; packet.size75
+..Receiving..
+....Received (96)...
+300 + 75 = 375
+....Sending ack start: 376
+message dropped.
+!!!Control Packet packet: start: 376 ; metadata: 0x11 ; sendto val: 0
+
+Sent up recent data (from ----) :::::::: Packet.start 300 ; packet.size75
+..Receiving..
+....Received (96)...
+....Queuing... Recv'd Packet: 450 vs. Seq: 375DATA: 
+....Sending ack start: 376
+!!!Control Packet packet: start: 376 ; metadata: 0x11 ; sendto val: 96
+
+Looking
+..Receiving..
+....Received (96)...
+....Queuing... Recv'd Packet: 600 vs. Seq: 375DATA: «ﬁhî`t∆
+....Sending ack start: 376
+message dropped.
+!!!Control Packet packet: start: 376 ; metadata: 0x11 ; sendto val: 0
+
+Looking
+..Receiving..
+....Received (96)...
+....Queuing... Recv'd Packet: 675 vs. Seq: 375DATA: 
+....Sending ack start: 376
+!!!Control Packet packet: start: 376 ; metadata: 0x11 ; sendto val: 96
+
+Looking
+..Receiving..
+....Received (96)...
+375 + 75 = 450
+....Sending ack start: 451
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 96
+
+Sent up recent data (from ----) :::::::: Packet.start 375 ; packet.size75
+Looking
+..Receiving..
+....Received (96)...
+....Queuing... Recv'd Packet: 825 vs. Seq: 450DATA: 
+....Sending ack start: 451
+message dropped.
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 0
+
+Looking
+..Receiving..
+....Received (96)...
+....Queuing... Recv'd Packet: 900 vs. Seq: 450DATA: 
+....Sending ack start: 451
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 96
+
+Looking
+..Receiving..
+....Received (96)...
+....Queuing... Recv'd Packet: 975 vs. Seq: 450DATA: 
+....Sending ack start: 451
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 96
+
+Looking
+..Receiving..
+....Received (96)...
+....Queuing... Recv'd Packet: 1050 vs. Seq: 450DATA: 
+....Sending ack start: 451
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 96
+
+Looking
+..Receiving..
+....Received (96)...
+....Queuing... Recv'd Packet: 1125 vs. Seq: 450DATA: 
+....Sending ack start: 451
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 96
+
+Looking
+..Receiving..
+....Received (96)...
+450 + 75 = 525
+....Sending ack start: 526
+!!!Control Packet packet: start: 526 ; metadata: 0x11 ; sendto val: 96
+
+Sent up recent data (from ----) :::::::: Packet.start 450 ; packet.size75
+Looking
+..Receiving..

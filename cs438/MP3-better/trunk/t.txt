@@ -1,0 +1,361 @@
+!!!Control Packet packet: start: 0 ; metadata: 0x3 ; sendto val: 92
+
+..Receiving..
+....Received (92)...
+0 + 75 = 75
+....Sending ack start: 76 : for packet data - #include <stdio.h>
+#include <string.h>
+
+void prompt(char* tag)
+{
+  char inp¿
+!!!Control Packet packet: start: 76 ; metadata: 0x11 ; sendto val: 92
+
+Looking
+#include <stdio.h>
+#include <string.h>
+
+void prompt(char* tag)
+{
+  char inp..Receiving..
+....Received (92)...
+75 + 75 = 150
+....Sending ack start: 151 : for packet data - [100];
+  printf("Enter value for: %s\n", tag);
+  gets(inp);
+  printf("Hello¿
+!!!Control Packet packet: start: 151 ; metadata: 0x11 ; sendto val: 92
+
+[100];
+  printf("Enter value for: %s\n", tag);
+  gets(inp);
+  printf("Hello..Receiving..
+....Received (92)...
+150 + 75 = 225
+....Sending ack start: 226 : for packet data -  your %s is %s\n", tag, inp);
+}
+
+int main(int argc, char** argv)
+{
+  char b¿
+!!!Control Packet packet: start: 226 ; metadata: 0x11 ; sendto val: 92
+
+ your %s is %s\n", tag, inp);
+}
+
+int main(int argc, char** argv)
+{
+  char b..Receiving..
+....Received (92)...
+225 + 75 = 300
+....Sending ack start: 301 : for packet data - uf[100];
+  printf("Enter main!\n");
+  strcpy(buf, argv[1]);
+  printf("Copie¿
+!!!Control Packet packet: start: 301 ; metadata: 0x11 ; sendto val: 92
+
+uf[100];
+  printf("Enter main!\n");
+  strcpy(buf, argv[1]);
+  printf("Copie..Receiving..
+....Received (92)...
+300 + 75 = 375
+....Sending ack start: 376 : for packet data - d: %s\n", buf);
+//  prompt("name");
+#if 0
+  char inp[4];
+  printf("Enter va¿
+message dropped.
+!!!Control Packet packet: start: 376 ; metadata: 0x11 ; sendto val: 0
+
+d: %s\n", buf);
+//  prompt("name");
+#if 0
+  char inp[4];
+  printf("Enter va..Receiving..
+....Received (92)...
+....Queuing... Recv'd Packet: 450 vs. Seq: 375DATA:  0;
+}
+
+
+#include <stdio.h>
+#include <string.h>
+
+void prompt(char* tag)
+{
+  ¿
+....Sending ack start: 376 : for packet data -  0;
+}
+
+
+#include <stdio.h>
+#include <string.h>
+
+void prompt(char* tag)
+{
+  ¿
+!!!Control Packet packet: start: 376 ; metadata: 0x11 ; sendto val: 92
+
+Looking
+..Receiving..
+....Received (92)...
+....Queuing... Recv'd Packet: 600 vs. Seq: 375DATA: f("Hello your %s is %s\n", tag, inp);
+}
+
+int main(int argc, char** argv)
+{
+¿
+....Sending ack start: 376 : for packet data - f("Hello your %s is %s\n", tag, inp);
+}
+
+int main(int argc, char** argv)
+{
+¿
+message dropped.
+!!!Control Packet packet: start: 376 ; metadata: 0x11 ; sendto val: 0
+
+Looking
+..Receiving..
+....Received (92)...
+....Queuing... Recv'd Packet: 675 vs. Seq: 375DATA:   char buf[100];
+  printf("Enter main!\n");
+  strcpy(buf, argv[1]);
+  print¿
+....Sending ack start: 376 : for packet data -   char buf[100];
+  printf("Enter main!\n");
+  strcpy(buf, argv[1]);
+  print¿
+!!!Control Packet packet: start: 376 ; metadata: 0x11 ; sendto val: 92
+
+Looking
+..Receiving..
+....Received (92)...
+375 + 75 = 450
+....Sending ack start: 451 : for packet data - lue for name\n");
+  gets(inp);
+  printf("Name: %s\n", inp);
+#endif
+  return¿
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 92
+
+lue for name\n");
+  gets(inp);
+  printf("Name: %s\n", inp);
+#endif
+  returnLooking
+..Receiving..
+....Received (92)...
+....Queuing... Recv'd Packet: 825 vs. Seq: 450DATA: Enter value for name\n");
+  gets(inp);
+  printf("Name: %s\n", inp);
+#endif
+¿
+....Sending ack start: 451 : for packet data - Enter value for name\n");
+  gets(inp);
+  printf("Name: %s\n", inp);
+#endif
+¿
+message dropped.
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 0
+
+Looking
+..Receiving..
+....Received (92)...
+....Queuing... Recv'd Packet: 900 vs. Seq: 450DATA:   return 0;
+}
+
+
+
+....Sending ack start: 451 : for packet data -   return 0;
+}
+
+
+
+!!!Control Packet packet: start: 451 ; metadata: 0x11 ; sendto val: 92
+
+Looking
+..Receiving..
+....Received (92)...
+450 + 75 = 525
+....Sending ack start: 526 : for packet data -  0;
+}
+
+
+#include <stdio.h>
+#include <string.h>
+
+void prompt(char* tag)
+{
+  ¿
+!!!Control Packet packet: start: 526 ; metadata: 0x11 ; sendto val: 92
+
+ 0;
+}
+
+
+#include <stdio.h>
+#include <string.h>
+
+void prompt(char* tag)
+{
+  Looking
+..Receiving..
+....Received (92)...
+525 + 75 = 600
+....Sending ack start: 601 : for packet data - char inp[100];
+  printf("Enter value for: %s\n", tag);
+  gets(inp);
+  print¿
+!!!Control Packet packet: start: 601 ; metadata: 0x11 ; sendto val: 92
+
+char inp[100];
+  printf("Enter value for: %s\n", tag);
+  gets(inp);
+  printLooking
+..Receiving..
+....Received (92)...
+600 + 75 = 675
+....Sending ack start: 676 : for packet data - f("Hello your %s is %s\n", tag, inp);
+}
+
+int main(int argc, char** argv)
+{
+¿
+!!!Control Packet packet: start: 676 ; metadata: 0x11 ; sendto val: 92
+
+f("Hello your %s is %s\n", tag, inp);
+}
+
+int main(int argc, char** argv)
+{
+Looking
+..Receiving..
+....Received (92)...
+675 + 75 = 750
+....Sending ack start: 751 : for packet data -   char buf[100];
+  printf("Enter main!\n");
+  strcpy(buf, argv[1]);
+  print¿
+!!!Control Packet packet: start: 751 ; metadata: 0x11 ; sendto val: 92
+
+  char buf[100];
+  printf("Enter main!\n");
+  strcpy(buf, argv[1]);
+  printLooking
+..Receiving..
+....Received (92)...
+750 + 75 = 825
+....Sending ack start: 826 : for packet data - f("Copied: %s\n", buf);
+//  prompt("name");
+#if 0
+  char inp[4];
+  printf("¿
+!!!Control Packet packet: start: 826 ; metadata: 0x11 ; sendto val: 92
+
+f("Copied: %s\n", buf);
+//  prompt("name");
+#if 0
+  char inp[4];
+  printf("Looking
+..Receiving..
+....Received (92)...
+825 + 75 = 900
+....Sending ack start: 901 : for packet data - Enter value for name\n");
+  gets(inp);
+  printf("Name: %s\n", inp);
+#endif
+¿
+!!!Control Packet packet: start: 901 ; metadata: 0x11 ; sendto val: 92
+
+Enter value for name\n");
+  gets(inp);
+  printf("Name: %s\n", inp);
+#endif
+Looking
+  return 0;
+}
+
+
+Looking
+..Receiving..
+....Received (92)...
+(((DUP PACKET)))
+  return 0;
+}
+
+
+
+----
+....Sending ack start: 917 : for packet data -   return 0;
+}
+
+
+
+!!!Control Packet packet: start: 917 ; metadata: 0x11 ; sendto val: 92
+
+  return 0;
+}
+
+
+..Receiving..
+....Received (92)...
+(((DUP PACKET)))
+  return 0;
+}
+
+
+
+----
+....Sending ack start: 917 : for packet data -   return 0;
+}
+
+
+
+!!!Control Packet packet: start: 917 ; metadata: 0x11 ; sendto val: 92
+
+  return 0;
+}
+
+
+..Receiving..
+....Received (92)...
+(((DUP PACKET)))
+  return 0;
+}
+
+
+
+----
+....Sending ack start: 917 : for packet data -   return 0;
+}
+
+
+
+!!!Control Packet packet: start: 917 ; metadata: 0x11 ; sendto val: 92
+
+  return 0;
+}
+
+
+..Receiving..
+....Received (92)...
+(((DUP PACKET)))
+  return 0;
+}
+
+
+
+----
+....Sending ack start: 917 : for packet data -   return 0;
+}
+
+
+
+!!!Control Packet packet: start: 917 ; metadata: 0x11 ; sendto val: 92
+
+  return 0;
+}
+
+
+..Receiving..
+....Received (92)...

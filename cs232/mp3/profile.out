@@ -1,0 +1,169 @@
+        2 [0x00000000]	0x8fa40000  lw $4, 0($29)                   ; 140: lw $a0, 0($sp)		# argc
+        2 [0x01000000]	0x27a50004  addiu $5, $29, 4                ; 141: addiu $a1, $sp, 4	# argv
+        2 [0x02000000]	0x24a60004  addiu $6, $5, 4                 ; 142: addiu $a2, $a1, 4	# envp
+        2 [0x03000000]	0x00041080  sll $2, $4, 2                   ; 143: sll $v0, $a0, 2
+        2 [0x04000000]	0x00c23021  addu $6, $6, $2                 ; 144: addu $a2, $a2, $v0
+        2 [0x05000000]	0x0c100009  jal 0x00400024 [main]           ; 145: jal main
+        1 [0x06000000]	0x00000000  nop                             ; 146: nop
+        1 [0x07000000]	0x3402000a  ori $2, $0, 10                  ; 148: li $v0 10
+        1 [0x08000000]	0x0000000c  syscall                         ; 149: syscall			# syscall 10 (exit)
+        2 [0x09000000]	0x2008000a  addi $8, $0, 10                 ; 6: add   $t0, $0, 0x0a       # $t0 = 10 ; 11 blocks, 0-A
+        9 [0x0a000000]	0x0100082a  slt $1, $8, $0                  ; 9: blt   $t0, $0, done
+        9 [0x0b000000]	0x14200062  bne $1, $0, 392 [done-0x0040002c]
+        9 [0x0c000000]	0x3c01ffff  lui $1, -1                      ; 10: sw    $t0, 0xffff0070($0)    # Which block to read
+        9 [0x0d000000]	0xac280070  sw $8, 112($1)
+        9 [0x0e000000]	0x0401001c  bgez $0 112 [turn_right-0x00400038]; 11: b     turn_right
+        9 [0x0f000000]	0x3c01ffff  lui $1, -1                      ; 14: lw    $t1, 0xffff0074($0)    # Current y position
+        9 [0x10000000]	0x8c290074  lw $9, 116($1)
+        9 [0x11000000]	0x3c01ffff  lui $1, -1                      ; 15: lw    $t2, 0xffff0024($0)    # Spimbot current y
+        9 [0x12000000]	0x8c2a0024  lw $10, 36($1)
+        9 [0x13000000]	0x01495822  sub $11, $10, $9                ; 16: sub   $t3, $t2, $t1          # $t3 = $t2 - $t1
+        9 [0x14000000]	0x0160082a  slt $1, $11, $0                 ; 17: blt   $t3, $0, turn_up
+        9 [0x15000000]	0x14200026  bne $1, $0, 152 [turn_up-0x00400054]
+        6 [0x16000000]	0x000b082a  slt $1, $0, $11                 ; 18: bgt   $t3, $0, turn_down
+        6 [0x17000000]	0x14200035  bne $1, $0, 212 [turn_down-0x0040005c]
+        9 [0x18000000]	0x0c10005d  jal 0x00400174 [stop]           ; 21: jal   stop
+        9 [0x19000000]	0x200900b4  addi $9, $0, 180                ; 22: add   $t1, $0, 180           
+        9 [0x1a000000]	0x3c01ffff  lui $1, -1                      ; 23: sw    $t1, 0xffff0014($0)    # Turn left
+        9 [0x1b000000]	0xac290014  sw $9, 20($1)
+        9 [0x1c000000]	0x20090001  addi $9, $0, 1                  ; 24: add   $t1, $0, 1
+        9 [0x1d000000]	0x3c01ffff  lui $1, -1                      ; 25: sw    $t1, 0xffff0018($0)
+        9 [0x1e000000]	0xac290018  sw $9, 24($1)
+        9 [0x1f000000]	0x0c100065  jal 0x00400194 [go]             ; 26: jal go
+    79533 [0x20000000]	0x3c01ffff  lui $1, -1                      ; 29: lw    $t1, 0xffff0070($0)    # Current x position
+    79533 [0x21000000]	0x8c290070  lw $9, 112($1)
+    79533 [0x22000000]	0x3c01ffff  lui $1, -1                      ; 30: lw    $t2, 0xffff0020($0)    # Spimbot current x
+    79533 [0x23000000]	0x8c2a0020  lw $10, 32($1)
+    79533 [0x24000000]	0x01495822  sub $11, $10, $9                ; 31: sub   $t3, $t2, $t1          # $t3 = $t2 - $t1
+    79533 [0x25000000]	0x000b082a  slt $1, $0, $11                 ; 32: ble   $t3, $0, end_iterate
+    79533 [0x26000000]	0x10200002  beq $1, $0, 8 [end_iterate-0x00400098]
+    79525 [0x27000000]	0x08100020  j 0x00400080 [push]             ; 33: j push
+        8 [0x28000000]	0x2108ffff  addi $8, $8, -1                 ; 36: sub   $t0, $t0, 0x01         # $t0--
+        8 [0x29000000]	0x0810000a  j 0x00400028 [iterate_blocks]   ; 37: j iterate_blocks
+        9 [0x2a000000]	0x0c10005d  jal 0x00400174 [stop]           ; 40: jal   stop
+        9 [0x2b000000]	0x200a0000  addi $10, $0, 0                 ; 41: add   $t2, $0, 0x00          # $t2 = 0
+        9 [0x2c000000]	0x3c01ffff  lui $1, -1                      ; 42: sw    $t2, 0xffff0014($0)    # Turn right
+        9 [0x2d000000]	0xac2a0014  sw $10, 20($1)
+        9 [0x2e000000]	0x354a0001  ori $10, $10, 1                 ; 43: or    $t2, $t2, 0x01         # $t2 |= 1
+        9 [0x2f000000]	0x3c01ffff  lui $1, -1                      ; 44: sw    $t2, 0xffff0018($0)
+        9 [0x30000000]	0xac2a0018  sw $10, 24($1)
+        9 [0x31000000]	0x0c100065  jal 0x00400194 [go]             ; 45: jal   go
+        9 [0x32000000]	0x3c01ffff  lui $1, -1                      ; 46: lw    $t1, 0xffff0070($0)    # Current x
+        9 [0x33000000]	0x8c290070  lw $9, 112($1)
+        9 [0x34000000]	0x212c000f  addi $12, $9, 15                ; 47: add   $t4, $t1, 15
+   109240 [0x35000000]	0x3c01ffff  lui $1, -1                      ; 50: lw    $t2, 0xffff0020($0)    # Spimbot current x
+   109240 [0x36000000]	0x8c2a0020  lw $10, 32($1)
+   109240 [0x37000000]	0x018a5822  sub $11, $12, $10               ; 51: sub   $t3, $t4, $t2          # $t3 = $t4 - $t1
+   109240 [0x38000000]	0x000b082a  slt $1, $0, $11                 ; 52: ble   $t3, $0, check_y
+   109240 [0x39000000]	0x1020ffd6  beq $1, $0, -168 [check_y-0x004000e4]
+   109232 [0x3a000000]	0x08100035  j 0x004000d4 [move_right]       ; 53: j move_right
+        4 [0x3b000000]	0x0c10005d  jal 0x00400174 [stop]           ; 56: jal   stop
+        4 [0x3c000000]	0x200c005a  addi $12, $0, 90                ; 57: add   $t4, $0, 90            # $t4 = 90
+        4 [0x3d000000]	0x3c01ffff  lui $1, -1                      ; 58: sw    $t4, 0xffff0014($0)    # Turn up
+        4 [0x3e000000]	0xac2c0014  sw $12, 20($1)
+        4 [0x3f000000]	0x200c0001  addi $12, $0, 1                 ; 59: add   $t4, $0, 1
+        4 [0x40000000]	0x3c01ffff  lui $1, -1                      ; 60: sw    $t4, 0xffff0018($0)
+        4 [0x41000000]	0xac2c0018  sw $12, 24($1)
+        4 [0x42000000]	0x0c100065  jal 0x00400194 [go]             ; 61: jal   go
+        4 [0x43000000]	0x3c01ffff  lui $1, -1                      ; 62: lw    $t1, 0xffff0074($0)    # Current y
+        4 [0x44000000]	0x8c290074  lw $9, 116($1)
+    14154 [0x45000000]	0x3c01ffff  lui $1, -1                      ; 65: lw    $t2, 0xffff0024($0)    # Spimbot current y
+    14154 [0x46000000]	0x8c2a0024  lw $10, 36($1)
+    14154 [0x47000000]	0x01495822  sub $11, $10, $9                ; 66: sub   $t3, $t2, $t1          # $t3 = $t2 - $t1
+    14154 [0x48000000]	0x1160ffd0  beq $11, $0, -192 [push_block-0x00400120]; 67: beq   $t3, $0, push_block
+    14151 [0x49000000]	0x000b082a  slt $1, $0, $11                 ; 68: bgt   $t3, $0, turn_down
+    14151 [0x4a000000]	0x14200002  bne $1, $0, 8 [turn_down-0x00400128]
+    14151 [0x4b000000]	0x08100045  j 0x00400114 [move_up]          ; 69: j move_up
+        6 [0x4c000000]	0x0c10005d  jal 0x00400174 [stop]           ; 72: jal   stop
+        6 [0x4d000000]	0x200c010e  addi $12, $0, 270               ; 73: add   $t4, $0, 270           # $t4 = 270
+        6 [0x4e000000]	0x3c01ffff  lui $1, -1                      ; 74: sw    $t4, 0xffff0014($0)    # Turn down
+        6 [0x4f000000]	0xac2c0014  sw $12, 20($1)
+        6 [0x50000000]	0x200c0001  addi $12, $0, 1                 ; 75: add   $t4, $0, 1
+        6 [0x51000000]	0x3c01ffff  lui $1, -1                      ; 76: sw    $t4, 0xffff0018($0)
+        6 [0x52000000]	0xac2c0018  sw $12, 24($1)
+        6 [0x53000000]	0x0c100065  jal 0x00400194 [go]             ; 77: jal   go
+        6 [0x54000000]	0x3c01ffff  lui $1, -1                      ; 78: lw    $t1, 0xffff0074($0)    # Current y
+        6 [0x55000000]	0x8c290074  lw $9, 116($1)
+    29792 [0x56000000]	0x3c01ffff  lui $1, -1                      ; 81: lw    $t2, 0xffff0024($0)    # Spimbot current y
+    29792 [0x57000000]	0x8c2a0024  lw $10, 36($1)
+    29792 [0x58000000]	0x01495822  sub $11, $10, $9                ; 82: sub   $t3, $t2, $t1          # $t3 = $t2 - $t1
+    29792 [0x59000000]	0x1160ffbf  beq $11, $0, -260 [push_block-0x00400164]; 83: beq   $t3, $0, push_block
+    29787 [0x5a000000]	0x0160082a  slt $1, $11, $0                 ; 84: blt   $t3, $0, turn_up
+    29787 [0x5b000000]	0x1420ffe0  bne $1, $0, -128 [turn_up-0x0040016c]
+    29787 [0x5c000000]	0x08100056  j 0x00400158 [move_down]        ; 85: j move_down
+       25 [0x5d000000]	0x23bdfffc  addi $29, $29, -4               ; 88: sub   $sp, $sp, 4
+       25 [0x5e000000]	0xafa80000  sw $8, 0($29)                   ; 89: sw    $t0, 0($sp)
+       25 [0x5f000000]	0x20080000  addi $8, $0, 0                  ; 90: add   $t0, $0, 0x00
+       25 [0x60000000]	0x3c01ffff  lui $1, -1                      ; 91: sw    $t0, 0xffff0010($0)
+       25 [0x61000000]	0xac280010  sw $8, 16($1)
+       25 [0x62000000]	0x8fa80000  lw $8, 0($29)                   ; 92: lw    $t0, 0($sp)
+       25 [0x63000000]	0x23bd0004  addi $29, $29, 4                ; 93: add   $sp, $sp, 4
+       25 [0x64000000]	0x03e00008  jr $31                          ; 94: jr  $ra
+       25 [0x65000000]	0x23bdfffc  addi $29, $29, -4               ; 97: sub   $sp, $sp, 4
+       25 [0x66000000]	0xafa80000  sw $8, 0($29)                   ; 98: sw    $t0, 0($sp)
+       25 [0x67000000]	0x2008000a  addi $8, $0, 10                 ; 99: add   $t0, $0, 0x0a
+       25 [0x68000000]	0x3c01ffff  lui $1, -1                      ; 100: sw    $t0, 0xffff0010($0)
+       25 [0x69000000]	0xac280010  sw $8, 16($1)
+       25 [0x6a000000]	0x8fa80000  lw $8, 0($29)                   ; 101: lw    $t0, 0($sp)
+       25 [0x6b000000]	0x23bd0004  addi $29, $29, 4                ; 102: add   $sp, $sp, 4
+       25 [0x6c000000]	0x03e00008  jr $31                          ; 103: jr  $ra
+        1 [0x6d000000]	0x03e00008  jr $31                          ; 106: jr  $ra
+
+
+kernel text segment
+
+        1 [0x00000000]	0x0001d821  addu $27, $0, $1                ; 61: move $k1 $at		# Save $at
+        1 [0x00000000]	0x3c019000  lui $1, -28672                  ; 63: sw $v0 s1		# Not re-entrent and we can't trust $sp
+        1 [0x00000000]	0xac2201f8  sw $2, 504($1)
+        1 [0x00000000]	0x3c019000  lui $1, -28672                  ; 64: sw $a0 s2		# But, we need to use these registers
+        1 [0x00000000]	0xac2401fc  sw $4, 508($1)
+        1 [0x00000000]	0x401a6800  mfc0 $26, $13                   ; 66: mfc0 $k0 $13		# Cause register
+        1 [0x00000000]	0x001a2082  srl $4, $26, 2                  ; 67: srl $a0 $k0 2		# Extract ExcCode Field
+        1 [0x00000000]	0x3084000f  andi $4, $4, 15                 ; 68: andi $a0 $a0 0xf
+        1 [0x00000000]	0x18800026  blez $4 152 [int_ret-0x800000a0]; 70: blez $a0 int_ret	# Don't print interrupts
+        1 [0x00000000]	0x00000000  nop                             ; 71: nop
+        1 [0x00000000]	0x34020004  ori $2, $0, 4                   ; 75: li $v0 4		# syscall 4 (print_str)
+        1 [0x00000000]	0x3c049000  lui $4, -28672 [__m1_]          ; 76: la $a0 __m1_
+        1 [0x00000000]	0x0000000c  syscall                         ; 77: syscall
+        1 [0x00000000]	0x34020001  ori $2, $0, 1                   ; 79: li $v0 1		# syscall 1 (print_int)
+        1 [0x00000000]	0x001a2082  srl $4, $26, 2                  ; 80: srl $a0 $k0 2		# Extract ExcCode Field
+        1 [0x00000000]	0x3084000f  andi $4, $4, 15                 ; 81: andi $a0 $a0 0xf
+        1 [0x00000000]	0x0000000c  syscall                         ; 82: syscall
+        1 [0x00000000]	0x34020004  ori $2, $0, 4                   ; 84: li $v0 4		# syscall 4 (print_str)
+        1 [0x00000000]	0x3c019000  lui $1, -28672                  ; 85: lw $a0 __excp($k0)
+        1 [0x00000000]	0x003a0821  addu $1, $1, $26
+        1 [0x00000000]	0x8c2401b0  lw $4, 432($1)
+        1 [0x00000000]	0x0000000c  syscall                         ; 86: syscall
+        1 [0x00000000]	0x34010018  ori $1, $0, 24                  ; 88: bne $k0 0x18 ok_pc	# Bad PC exception requires special checks
+        1 [0x00000000]	0x143a0008  bne $1, $26, 32 [ok_pc-0x800000dc]
+        1 [0x00000000]	0x00000000  nop                             ; 89: nop
+        1 [0x00000000]	0x40047000  mfc0 $4, $14                    ; 91: mfc0 $a0, $14		# EPC
+        1 [0x00000000]	0x30840003  andi $4, $4, 3                  ; 92: andi $a0, $a0, 0x3	# Is EPC word-aligned?
+        1 [0x00000000]	0x10040004  beq $0, $4, 16 [ok_pc-0x800000ec]; 93: beq $a0, 0, ok_pc
+        1 [0x00000000]	0x00000000  nop                             ; 94: nop
+        1 [0x00000000]	0x3402000a  ori $2, $0, 10                  ; 96: li $v0 10		# Exit on really bad PC
+        1 [0x00000000]	0x0000000c  syscall                         ; 97: syscall
+        1 [0x00000000]	0x34020004  ori $2, $0, 4                   ; 100: li $v0 4		# syscall 4 (print_str)
+        1 [0x00000000]	0x3c019000  lui $1, -28672 [__m2_]          ; 101: la $a0 __m2_
+        1 [0x00000000]	0x3424000d  ori $4, $1, 13 [__m2_]
+        1 [0x00000000]	0x0000000c  syscall                         ; 102: syscall
+        1 [0x00000000]	0x40806800  mtc0 $0, $13                    ; 104: mtc0 $0, $13		# Clear Cause register
+        1 [0x00000000]	0x3c019000  lui $1, -28672                  ; 109: lw $v0 s1		# Restore regs
+        1 [0x00000000]	0x8c2201f8  lw $2, 504($1)
+        1 [0x00000000]	0x3c019000  lui $1, -28672                  ; 110: lw $a0 s2
+        1 [0x00000000]	0x8c2401fc  lw $4, 508($1)
+        1 [0x00000000]	0x401a7000  mfc0 $26, $14                   ; 111: mfc0 $k0 $14		# EPC
+        1 [0x00000000]	0x275a0004  addiu $26, $26, 4               ; 112: addiu $k0 $k0 4		# Return to next instruction
+        1 [0x00000000]	0x001b0821  addu $1, $0, $27                ; 114: move $at $k1		# Restore $at
+        1 [0x00000000]	0x42000010  rfe                             ; 116: rfe			# Return from exception handler
+        1 [0x00000000]	0x03400008  jr $26                          ; 117: jr $k0
+        1 [0x00000000]	0x00000000  nop                             ; 118: nop
+        1 [0x00000000]	0x3c019000  lui $1, -28672                  ; 123: lw $v0 s1		# Restore regs
+        1 [0x00000000]	0x8c2201f8  lw $2, 504($1)
+        1 [0x00000000]	0x3c019000  lui $1, -28672                  ; 124: lw $a0 s2
+        1 [0x00000000]	0x8c2401fc  lw $4, 508($1)
+        1 [0x00000000]	0x401a7000  mfc0 $26, $14                   ; 125: mfc0 $k0 $14		# EPC (return to EPC)
+        1 [0x00000000]	0x001b0821  addu $1, $0, $27                ; 127: move $at $k1		# Restore $at
+        1 [0x00000000]	0x42000010  rfe                             ; 129: rfe			# Return from exception handler
+        1 [0x00000000]	0x03400008  jr $26                          ; 130: jr $k0
+        1 [0x00000000]	0x00000000  nop                             ; 131: nop

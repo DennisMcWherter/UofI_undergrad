@@ -1,0 +1,18 @@
+<map>
+  <rough>
+    <x>5</x>
+    <y>10</y>
+  </rough>
+  <mountain>
+    <x>-10</x>
+    <y>25</y>
+  </mountain>
+  <mountain>
+    <x>23</x>
+    <y>0</y>
+  </mountain>
+  <rough>
+    <x>20</x>
+    <y>22</y>
+  </rough>
+</map>

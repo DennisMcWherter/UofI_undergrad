@@ -1,0 +1,26 @@
+## you get to write this one from scratch.
+## we'll only be testing its behavior, not poking your code directly
+
+.text
+main:
+  add   $t0, $0, 0xe   # $t0 = 14 ; counter var
+
+
+loop:
+  blt   $t0, $0, done
+  sw    $t0, 0xffff0070($0)
+  lw    $t1, 0xffff0070($0)
+  lw    $t2, 0xffff0074($0)
+  add   $v0, $0, 4
+  add   $a0, $t1, $0
+  syscall
+  li    $v0, 4
+  add   $a0, $t2, $0
+  syscall
+  sub   $t0, $t0, 0x01
+  j loop
+
+done:
+  jr $ra
+  nop
+

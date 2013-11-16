@@ -1,0 +1,43 @@
+---------------------
+Implementation Log
+---------------------
+
+* Implemented concurrent queue
+* Implemented working client connection/frame reader
+* Implemented crc-12 check
+* Implemented client writer
+
+------------
+Known Bugs
+------------
+
+* No known bugs
+
+------------------
+Design Decisions
+------------------
+
+The client application has 3 threads. A main thread and 2 workers. The main thread merely
+intializes the connection with the host. Upon a successful connection, it spawns the 2
+worker threads and sleeps. In retrospect, it appears that the main thread could be used
+instead of a second worker thread.
+
+The work is divided among the threads as reading from a socket and writing to an output file.
+The socket reader continues to read from a socket until it receives a 0 (i.e. connection closed
+by host). The thread keeps a count of how many bytes it has read. Once it receives the amount of
+bytes in a valid frame (i.e. 1024) it performs a crc-12 check. If the frame passes the check,
+the data is passed on to the writer via the concurrent queue.
+
+The writer thread uses a call provided by the data structure to wait for available data.
+When this method returns and a non-NULL entry is popped from the queue, the thread
+processes the frame and writes into the file appropriately. 
+
+The decision to use a queue was due to the fact that frames should be processed in the
+order in which they are received. Thus, I implemented a concurrent queue. The mutex and
+condition variable are located within the list structure. This allows several distinct
+lists to be concurrently accessed in a safe manner (i.e. rather than using global mutexes
+and condition variables). Furthermore, I made the condition variable part of the structure
+so the queue could provide waiting functionality. This way any code using the client does
+not need a separate condition variable nor does it require any additional work to avoid
+busy waiting on an empty queue.
+

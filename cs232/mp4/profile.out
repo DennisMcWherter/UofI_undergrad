@@ -1,0 +1,138 @@
+        2 [0x00000000]	0x8fa40000  lw $4, 0($29)                   ; 140: lw $a0, 0($sp)		# argc
+        2 [0x01000000]	0x27a50004  addiu $5, $29, 4                ; 141: addiu $a1, $sp, 4	# argv
+        2 [0x02000000]	0x24a60004  addiu $6, $5, 4                 ; 142: addiu $a2, $a1, 4	# envp
+        2 [0x03000000]	0x00041080  sll $2, $4, 2                   ; 143: sll $v0, $a0, 2
+        2 [0x04000000]	0x00c23021  addu $6, $6, $2                 ; 144: addu $a2, $a2, $v0
+        2 [0x05000000]	0x0c100009  jal 0x00400024 [main]           ; 145: jal main
+        1 [0x06000000]	0x00000000  nop                             ; 146: nop
+        1 [0x07000000]	0x3402000a  ori $2, $0, 10                  ; 148: li $v0 10
+        1 [0x08000000]	0x0000000c  syscall                         ; 149: syscall			# syscall 10 (exit)
+        2 [0x09000000]	0x3408000a  ori $8, $0, 10                  ; 6: li	$t0, 10				
+        2 [0x0a000000]	0x3c01ffff  lui $1, -1                      ; 7: sw	$t0, 0xffff0010($zero)		# set velocity
+        2 [0x0b000000]	0xac280010  sw $8, 16($1)
+        2 [0x0c000000]	0x340a1001  ori $10, $0, 4097               ; 10: li  $t2, 0x1001
+        2 [0x0d000000]	0x408a6000  mtc0 $10, $12                   ; 11: mtc0  $t2, $12
+        2 [0x0e000000]	0x340b0000  ori $11, $0, 0                  ; 13: li	$t3, 0
+    16419 [0x0f000000]	0x3408000a  ori $8, $0, 10                  ; 16: li	$t0, 10
+    16417 [0x10000000]	0x010b4022  sub $8, $8, $11                 ; 17: sub	$t0, $t0, $t3
+    16419 [0x11000000]	0x3c01ffff  lui $1, -1                      ; 18: sw	$t0, 0xffff0070($zero)
+    16414 [0x12000000]	0xac280070  sw $8, 112($1)
+    16419 [0x13000000]	0x3c01ffff  lui $1, -1                      ; 19: lw	$a0, 0xffff0070($zero)	# block x and y location
+    16420 [0x14000000]	0x8c240070  lw $4, 112($1)
+    16417 [0x15000000]	0x3c01ffff  lui $1, -1                      ; 20: lw	$a1, 0xffff0074($zero)
+    16419 [0x16000000]	0x8c250074  lw $5, 116($1)
+    16414 [0x17000000]	0x2881008c  slti $1, $4, 140                ; 22: blt	$a0, 140, next		# already on my side
+    16419 [0x18000000]	0x14200030  bne $1, $0, 192 [next-0x00400060]
+        7 [0x19000000]	0x28810119  slti $1, $4, 281                ; 23: bgt	$a0, 280, next 		# not reachable
+        7 [0x1a000000]	0x1020002e  beq $1, $0, 184 [next-0x00400068]
+        7 [0x1b000000]	0x3c011001  lui $1, 4097                    ; 24: lw  $t4, bonked
+        7 [0x1c000000]	0x8c2c0000  lw $12, 0($1)
+        7 [0x1d000000]	0x1580002b  bne $12, $0, 172 [next-0x00400074]; 25: bne $t4, $0, next
+        7 [0x1e000000]	0x2084000f  addi $4, $4, 15                 ; 27: add 	$a0, $a0, 15		# try to over shoot it
+        7 [0x1f000000]	0x3c01ffff  lui $1, -1                      ; 30: sw	$zero, 0xffff0014($zero) # turn to drive in +x
+        7 [0x20000000]	0xac200014  sw $0, 20($1)
+        7 [0x21000000]	0x34080001  ori $8, $0, 1                   ; 31: li	$t0, 1
+        7 [0x22000000]	0x3c01ffff  lui $1, -1                      ; 32: sw	$t0, 0xffff0018($zero)
+        7 [0x23000000]	0xac280018  sw $8, 24($1)
+    58197 [0x24000000]	0x3c01ffff  lui $1, -1                      ; 35: lw	$t2, 0xffff0020($zero)	# get my X position
+    58197 [0x25000000]	0x8c2a0020  lw $10, 32($1)
+    58197 [0x26000000]	0x0144082a  slt $1, $10, $4                 ; 36: blt	$t2, $a0, x_pos		# keep going until I pass block
+    58197 [0x27000000]	0x1420fffd  bne $1, $0, -12 [x_pos-0x0040009c]
+        7 [0x28000000]	0x3c01ffff  lui $1, -1                      ; 40: lw	$t2, 0xffff0024($zero)	# get my Y position
+        7 [0x29000000]	0x8c2a0024  lw $10, 36($1)
+        7 [0x2a000000]	0x00aa082a  slt $1, $5, $10                 ; 41: bgt	$t2, $a1, too_high
+        7 [0x2b000000]	0x14200003  bne $1, $0, 12 [too_high-0x004000ac]
+        3 [0x2c000000]	0x3409005a  ori $9, $0, 90                  ; 44: li	$t1, 90			# turn to drive in +y
+        3 [0x2d000000]	0x0810002f  j 0x004000bc [angle_y]          ; 45: j	angle_y
+        5 [0x2e000000]	0x3409010e  ori $9, $0, 270                 ; 48: li	$t1, 270		# turn to drive in -y
+        7 [0x2f000000]	0x3c01ffff  lui $1, -1                      ; 51: sw	$t1, 0xffff0014($zero) 
+        7 [0x30000000]	0xac290014  sw $9, 20($1)
+        7 [0x31000000]	0x34090001  ori $9, $0, 1                   ; 52: li	$t1, 1
+        7 [0x32000000]	0x3c01ffff  lui $1, -1                      ; 53: sw	$t1, 0xffff0018($zero)
+        7 [0x33000000]	0xac290018  sw $9, 24($1)
+    36303 [0x34000000]	0x3c01ffff  lui $1, -1                      ; 56: lw	$t2, 0xffff0024($zero)	# get my Y position
+    36303 [0x35000000]	0x8c2a0024  lw $10, 36($1)
+    36303 [0x36000000]	0x00aa5022  sub $10, $5, $10                ; 57: sub	$t2, $a1, $t2
+    36303 [0x37000000]	0x05410002  bgez $10 8                      ; 58: abs	$t2, $t2
+    21788 [0x38000000]	0x000a5022  sub $10, $0, $10
+    36303 [0x39000000]	0x29410002  slti $1, $10, 2                 ; 59: bge	$t2, 2, y_pos		# keep going until I'm within 2
+    36303 [0x3a000000]	0x1020fffa  beq $1, $0, -24 [y_pos-0x004000e8]
+        7 [0x3b000000]	0x340900b4  ori $9, $0, 180                 ; 63: li	$t1, 180
+        7 [0x3c000000]	0x3c01ffff  lui $1, -1                      ; 64: sw	$t1, 0xffff0014($zero) 
+        7 [0x3d000000]	0xac290014  sw $9, 20($1)
+        7 [0x3e000000]	0x34090001  ori $9, $0, 1                   ; 65: li	$t1, 1
+        7 [0x3f000000]	0x3c01ffff  lui $1, -1                      ; 66: sw	$t1, 0xffff0018($zero)
+        7 [0x40000000]	0xac290018  sw $9, 24($1)
+    26747 [0x41000000]	0x3c011001  lui $1, 4097                    ; 69: lw  $t4, bonked
+    26747 [0x42000000]	0x8c2c0000  lw $12, 0($1)
+    26747 [0x43000000]	0x15800005  bne $12, $0, 20 [next-0x0040010c]; 70: bne $t4, $0, next
+    26747 [0x44000000]	0x3c01ffff  lui $1, -1                      ; 71: lw	$t2, 0xffff0020($zero)	# get my X position
+    26747 [0x45000000]	0x8c2a0020  lw $10, 32($1)
+    26747 [0x46000000]	0x2941008d  slti $1, $10, 141               ; 72: bgt	$t2, 140, still_pushing	# keep going until I pass block
+    26747 [0x47000000]	0x1020fffa  beq $1, $0, -24 [still_pushing-0x0040011c]
+    16420 [0x48000000]	0x3c011001  lui $1, 4097                    ; 75: sw  $0, bonked
+    16417 [0x49000000]	0xac200000  sw $0, 0($1)
+    16419 [0x4a000000]	0x216b0001  addi $11, $11, 1                ; 76: add	$t3, $t3, 1
+    16413 [0x4b000000]	0x2961000b  slti $1, $11, 11                ; 77: blt	$t3, 11, m_loop		# if block_num < 11
+    16418 [0x4c000000]	0x1420ffc3  bne $1, $0, -244 [m_loop-0x00400130]
+     1493 [0x4d000000]	0x340b0000  ori $11, $0, 0                  ; 78: li	$t3, 0			# otherwise start at block 0 again
+     1493 [0x4e000000]	0x0810000f  j 0x0040003c [m_loop]           ; 79: j	m_loop
+
+
+kernel text segment
+
+    18185 [0x00000000]	0x0001d821  addu $27, $0, $1                ; 91: move  $k1, $at      # Save $at register
+    18185 [0x00000000]	0x3c019000  lui $1, -28672 [chunkIH]        ; 93: la    $k0, chunkIH  # Load address to the register we need
+    18185 [0x00000000]	0x343a0200  ori $26, $1, 512 [chunkIH]
+    18185 [0x00000000]	0xaf440000  sw $4, 0($26)                   ; 94: sw    $a0, 0($k0)
+    18185 [0x00000000]	0xaf420004  sw $2, 4($26)                   ; 95: sw    $v0, 4($k0)
+    18185 [0x00000000]	0x401a6800  mfc0 $26, $13                   ; 97: mfc0  $k0, $13      # Cause register
+    18185 [0x00000000]	0x001ad082  srl $26, $26, 2                 ; 98: srl   $k0, $k0, 2
+    18185 [0x00000000]	0x335a000f  andi $26, $26, 15               ; 99: and   $k0, $k0, 0xf
+    18185 [0x00000000]	0x17400019  bne $26, $0, 100 [exception_handler-0x800000a0]; 100: bne   $k0, $0, exception_handler
+    36369 [0x00000000]	0x401a6800  mfc0 $26, $13                   ; 103: mfc0  $k0, $13      # Cause register
+    36369 [0x00000000]	0x1340001c  beq $26, $0, 112 [done-0x800000a8]; 104: beq   $k0, $0, done # Everything handled
+    18185 [0x00000000]	0x33441000  andi $4, $26, 4096              ; 106: and   $a0, $k0, 0x1000 # Check for bonk interrupt
+    18185 [0x00000000]	0x14800006  bne $4, $0, 24 [bonk_interrupt-0x800000b0]; 107: bne   $a0, $0, bonk_interrupt
+        1 [0x00000000]	0x34020004  ori $2, $0, 4                   ; 109: li    $v0, 4
+        1 [0x00000000]	0x3c019000  lui $1, -28672 [unhandled_interrupt]; 110: la    $a0, unhandled_interrupt
+        1 [0x00000000]	0x34240227  ori $4, $1, 551 [unhandled_interrupt]
+        1 [0x00000000]	0x0000000c  syscall                         ; 111: syscall
+        1 [0x00000000]	0x08000046  j 0x00000118 [done]             ; 113: j done # Unhandled interrupts just finish
+    18185 [0x00000000]	0x34040001  ori $4, $0, 1                   ; 116: li    $a0, 1
+    18185 [0x00000000]	0x3c011001  lui $1, 4097                    ; 117: sw    $a0, bonked           # We interrupted
+    18185 [0x00000000]	0xac240000  sw $4, 0($1)
+    18185 [0x00000000]	0x3c01ffff  lui $1, -1                      ; 120: sw    $a0, 0xffff0018($0)
+    18185 [0x00000000]	0xac240018  sw $4, 24($1)
+    18185 [0x00000000]	0x3c01ffff  lui $1, -1                      ; 121: li    $a0, -90
+    18185 [0x00000000]	0x3424ffa6  ori $4, $1, -90
+    18185 [0x00000000]	0x3c01ffff  lui $1, -1                      ; 122: sw    $a0, 0xffff0014($0)
+    18185 [0x00000000]	0xac240014  sw $4, 20($1)
+    18185 [0x00000000]	0x3404000a  ori $4, $0, 10                  ; 123: li    $a0, 10
+    18185 [0x00000000]	0x3c01ffff  lui $1, -1                      ; 124: sw    $a0, 0xffff0010($0)
+    18185 [0x00000000]	0xac240010  sw $4, 16($1)
+    18185 [0x00000000]	0x3c01ffff  lui $1, -1                      ; 127: sw    $0, 0xffff0060($0)    # Acknowledge interrupt
+    18185 [0x00000000]	0xac200060  sw $0, 96($1)
+    18185 [0x00000000]	0x08000029  j 0x000000a4 [interrupt_dispatch]; 129: j interrupt_dispatch
+        1 [0x00000000]	0x34020004  ori $2, $0, 4                   ; 132: li    $v0, 4
+        1 [0x00000000]	0x3c019000  lui $1, -28672 [non_interrupt]  ; 133: la    $a0, non_interrupt
+        1 [0x00000000]	0x34240208  ori $4, $1, 520 [non_interrupt]
+        1 [0x00000000]	0x0000000c  syscall                         ; 134: syscall
+        1 [0x00000000]	0x08000046  j 0x00000118 [done]             ; 135: j done
+    18185 [0x00000000]	0x3c019000  lui $1, -28672 [chunkIH]        ; 138: la    $k0, chunkIH
+    18185 [0x00000000]	0x343a0200  ori $26, $1, 512 [chunkIH]
+    18185 [0x00000000]	0x8f420004  lw $2, 4($26)                   ; 139: lw    $v0, 4($k0)
+    18184 [0x00000000]	0x8f440000  lw $4, 0($26)                   ; 140: lw    $a0, 0($k0)
+    18184 [0x00000000]	0x401a7000  mfc0 $26, $14                   ; 141: mfc0  $k0, $14
+    18184 [0x00000000]	0x001b0821  addu $1, $0, $27                ; 144: move  $at, $k1
+    18184 [0x00000000]	0x42000010  rfe                             ; 147: rfe
+    18184 [0x00000000]	0x03400008  jr $26                          ; 148: jr  $k0
+        1 [0x00000000]	0x00000000  nop                             ; 149: nop
+        1 [0x00000000]	0x8c2201f8  lw $2, 504($1)
+        1 [0x00000000]	0x3c019000  lui $1, -28672                  ; 124: lw $a0 s2
+        1 [0x00000000]	0x8c2401fc  lw $4, 508($1)
+        1 [0x00000000]	0x401a7000  mfc0 $26, $14                   ; 125: mfc0 $k0 $14		# EPC (return to EPC)
+        1 [0x00000000]	0x001b0821  addu $1, $0, $27                ; 127: move $at $k1		# Restore $at
+        1 [0x00000000]	0x42000010  rfe                             ; 129: rfe			# Return from exception handler
+        1 [0x00000000]	0x03400008  jr $26                          ; 130: jr $k0
+        1 [0x00000000]	0x00000000  nop                             ; 131: nop

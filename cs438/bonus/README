@@ -1,0 +1,6 @@
+To implement PGPS, I first solved the problem for GPS. Then, with these
+results, I calculated which packet to send next based on who should finish
+first in the theoretical GPS scenario.
+It is important to note that the calcuation was based on a simulated value.
+I made calculations based on what the simulator thought was the next
+event (accounting for arrivals appropriately).

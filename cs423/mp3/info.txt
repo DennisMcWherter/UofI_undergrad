@@ -1,0 +1,8 @@
+/usr/src/kernels/2.6.40.3-0.fc15.x86-64.debug/include/linux/sched.h
+~line 1355
+
+unsigned long maj_flt, min_flt
+
+cputime_t utime, stime
+
+set these to 0 each interval after measuring

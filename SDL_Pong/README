@@ -1,0 +1,15 @@
+This is a simple pong game created by Dennis J. McWherter, Jr.
+with the SDL library. In order to run this program, you may have
+to copy your own SDL source "include" directory to the "SDL" 
+after running "./configure" for your system's specific SDL 
+configuration.
+
+The included SDL header files are from MSVC 10.
+
+I have included the archived package of the version libSDL used
+ within this distribution - if you need to recompile, or
+reconfigure the header files, you can simply extract this archive
+and proceed accordingly.
+
+Dennis
+2/5/11
