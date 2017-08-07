@@ -14,7 +14,7 @@ cs241 - Systems programming
 
 cs242 - Programming studio
 
-cs357 - Numerical methods
+cs357 - Numerical methods (code redacted by [Professor's Request](https://github.com/DeathByTape/UofI_undergrad/issues/1))
 
 cs421 - Programming languages and compilers
 
